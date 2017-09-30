@@ -29,33 +29,48 @@ grid = map(lambda x: int(x), grid)
 
 # What is the greatest product of four adjacent numbers in the same direction (up, down, left, right, or diagonally) in the 20x20 grid?
 
-max_sum = 0
-max_list = []
+def prod(xs):
+    return reduce(lambda x, y: x * y, xs, 1)
+
+max_prod = 0
 
 for n in range(0, len(grid)-1):
+    if n % 20 == 0:
+        print ""
+
     # check to the right
     xs = grid[n:n+4]
     if len(xs) == 4:
-        if sum(xs) > max_sum:
-            max_sum = sum(xs)
-            max_list = xs
+        if prod(xs) > max_prod:
+            max_prod = prod(xs)
 
     # check below
     try:
         ys = [grid[n], grid[n+20], grid[n+40], grid[n+60]]
-        if sum(ys) > max_sum:
-            max_sum = sum(ys)
-            max_list = ys
+        if prod(ys) > max_prod:
+            max_prod = prod(ys)
     except:
-        continue
+        pass
 
-    # check diagonal
+    # check diagonal right down
     try:
-        zs = [grid[n], grid[n+21], grid[n+42], grid[n+63]]
-        if sum(zs) > max_sum:
-            max_sum = sum(zs)
-            max_list = zs
+        # but not if you are at the right edge
+        if n % 20 < 17:
+            zs = [grid[n], grid[n+21], grid[n+42], grid[n+63]]
+            if prod(zs) > max_prod:
+                max_prod = prod(zs)
     except:
-        continue
+        pass
 
-print max_list
+    # check diagonal left down
+    try:
+        # but not if you are at the left edge
+        if n % 20 > 2:
+            zs = [grid[n], grid[n+19], grid[n+38], grid[n+57]]
+            if prod(zs) > max_prod:
+                max_prod = prod(zs)
+    except:
+        pass
+
+
+print max_prod
